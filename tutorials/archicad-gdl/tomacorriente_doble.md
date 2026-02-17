@@ -73,21 +73,21 @@ for s = -1 to 1 step 2
     addz zMod
 
     ! Disco frontal del módulo
-    cylinder 0.001, rMod
+    cylind 0.001, rMod
 
     ! Aro/marco leve
     addz -0.001
-    cylinder 0.0015, rMod * 0.92
+    cylind 0.0015, rMod * 0.92
 
     ! Huecos de clavija (2 cilindros restados visualmente)
     ! Para simplificar librería, modelamos como cavidades cortas
     addz 0.0002
     addx -huecoSep/2
-    cylinder -0.0012, huecoR
+    cylind -0.0012, huecoR
     del 1
 
     addx huecoSep
-    cylinder -0.0012, huecoR
+    cylind -0.0012, huecoR
     del 1
 
     del 3
