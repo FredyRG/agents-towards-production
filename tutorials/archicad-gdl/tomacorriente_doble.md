@@ -53,10 +53,20 @@ Pega esto en **3D Script**:
 
 resol 36
 
-an = A
-al = B
-esp = placaEsp
+an = max(A, 0.01)
+al = max(B, 0.01)
+esp = max(placaEsp, 0.001)
 rad = min (bordeR, an/2, al/2)
+
+! -------- Protección de parámetros --------
+_eps = 0.0005
+insetSafe = min(inset, an/2 - _eps, al/2 - _eps)
+rMod = min(moduloR, (an/2 - insetSafe), (al/2 - insetSafe))
+rMod = max(rMod, _eps)
+huecoRSafe = max(huecoR, _eps)
+huecoSepSafe = max(huecoSep, _eps * 2)
+embutidoSafe = max(embutido, 0)
+zMod = max(esp - embutidoSafe, _eps)
 
 ! -------- Placa frontal --------
 material matPlaca
@@ -65,29 +75,26 @@ block an, al, esp
 ! -------- Dos módulos circulares --------
 material matModulo
 
-zMod = esp - embutido
-rMod = min(moduloR, (an/2 - inset), (al/2 - inset))
-
 for s = -1 to 1 step 2
     addx s * sepX
     addz zMod
 
     ! Disco frontal del módulo
-    cylind 0.001, rMod
+    cylind max(0.001, _eps), rMod
 
     ! Aro/marco leve
     addz -0.001
-    cylind 0.0015, rMod * 0.92
+    cylind max(0.0015, _eps), max(rMod * 0.92, _eps)
 
     ! Huecos de clavija (2 cilindros restados visualmente)
     ! Para simplificar librería, modelamos como cavidades cortas
     addz 0.0002
-    addx -huecoSep/2
-    cylind -0.0012, huecoR
+    addx -huecoSepSafe/2
+    cylind -0.0012, huecoRSafe
     del 1
 
-    addx huecoSep
-    cylind -0.0012, huecoR
+    addx huecoSepSafe
+    cylind -0.0012, huecoRSafe
     del 1
 
     del 3
